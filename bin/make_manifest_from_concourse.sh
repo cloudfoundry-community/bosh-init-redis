@@ -32,7 +32,7 @@ resource_pools:
 - name: default
   network: default
   stemcell:
-  url: file://${stemcell_path}
+    url: file://${stemcell_path}
   cloud_properties:
     instance_type: m3.medium
     availability_zone: us-east-1c
