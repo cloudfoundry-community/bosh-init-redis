@@ -1,0 +1,79 @@
+---
+jobs:
+- name: bosh-init-redis
+  public: true
+  serial: true
+  plan:
+  - aggregate:
+    - {get: stemcell, trigger: true}
+    - {get: release-cpi, trigger: true}
+    - {get: release-redis, trigger: true}
+    - {get: bosh-init, trigger: true}
+    - {get: bosh-init-redis, trigger: true}
+
+  - task: ls-inputs
+    config:
+      platform: linux
+      image: {{docker-hub-task-image}}
+      inputs:
+      - name: stemcell
+      - name: release-cpi
+      - name: release-redis
+      - name: bosh-init
+      - name: bosh-init-redis
+      run:
+        path: ls
+        args: ["-opR", "."]
+  - task: make-manifest
+    config:
+      platform: linux
+      image: {{docker-hub-task-image}}
+      inputs:
+      - {name: bosh-init-redis, path: .}
+      - {name: stemcell, path: assets}
+      - {name: release-cpi, path: assets}
+      - {name: release-redis, path: assets}
+      run: {path: ./bin/make_manifest.sh}
+      params:
+        EIP: {{eip}}
+        ACCESS_KEY_ID: {{aws-access-key-id}}
+        SECRET_ACCESS_KEY: {{aws-secret-access-key}}
+        KEY_NAME: {{aws-keyname}}
+        PRIVATE_KEY_PATH: {{aws-key-path}}
+        SECURITY_GROUP: {{redis-security-group}}
+
+  - task: deployment
+    config:
+      platform: linux
+      image: {{docker-hub-task-image}}
+      inputs:
+      - {name: bosh-init, path: .}
+      - {name: make-manifest, path: .}
+      run: {path: ./bin/deploy_from_concourse.sh}
+
+resources:
+- name: bosh-init
+  type: github-release
+  source:
+    user: cloudfoundry
+    repository: bosh-init
+
+- name: stemcell
+  type: bosh-io-stemcell
+  source:
+    name: {{bosh-stemcell-name}}
+    version: {{bosh-stemcell-version}}
+
+- name: release-cpi
+  type: bosh-io-release
+  source: {repository: cloudfoundry/bosh-aws-cpi-release}
+
+- name: release-redis
+  type: bosh-io-release
+  source: {repository: cloudfoundry-community/redis-boshrelease}
+
+- name: bosh-init-redis
+  type: git
+  source:
+    uri: https://github.com/cloudfoundry-community/bosh-init-redis.git
+    branch: {{pipeline-branch}}

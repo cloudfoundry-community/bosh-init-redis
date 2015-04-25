@@ -5,3 +5,4 @@ tmp
 .DS_Store
 redis.yml
 deployment.json
+credentials.yml
