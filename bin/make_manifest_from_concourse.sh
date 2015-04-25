@@ -41,6 +41,7 @@ jobs:
 - name: redis
   instances: 1
   persistent_disk: 10240
+  resource_pool: default
   templates:
   - {name: redis, release: redis}
   networks:
