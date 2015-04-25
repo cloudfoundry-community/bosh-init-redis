@@ -19,20 +19,27 @@ jobs:
       - name: stemcell
       - name: release-cpi
       - name: release-redis
-      - name: bosh-init
+      - name: git-bosh-init
       - name: bosh-init-redis
       run:
         path: ls
         args: ["-opR", "."]
+  - task: build-bosh-init
+    config:
+      platform: linux
+      image: {{docker-hub-task-image}}
+      inputs:
+      - {name: git-bosh-init, path: .}
+      run: {path: ./bin/build.sh}
   - task: make-manifest
     config:
       platform: linux
       image: {{docker-hub-task-image}}
       inputs:
       - {name: bosh-init-redis, path: .}
-      - {name: stemcell, path: assets}
-      - {name: release-cpi, path: assets}
-      - {name: release-redis, path: assets}
+      - {name: stemcell}
+      - {name: release-cpi}
+      - {name: release-redis}
       run: {path: ./bin/make_manifest.sh}
       params:
         EIP: {{eip}}
@@ -47,7 +54,7 @@ jobs:
       platform: linux
       image: {{docker-hub-task-image}}
       inputs:
-      - {name: bosh-init, path: .}
+      - {name: build-bosh-init}
       - {name: make-manifest, path: .}
       run: {path: ./bin/deploy_from_concourse.sh}
 

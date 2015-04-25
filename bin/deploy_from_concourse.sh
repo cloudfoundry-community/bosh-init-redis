@@ -4,6 +4,7 @@ DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 cd $DIR/..
 
 export PATH=$PWD/bin:$PATH
+export PATH=$PWD/build-bosh-init/out:$PATH
 
 bosh-init deploy redis.yml \
   stemcell/stemcell.tgz \
