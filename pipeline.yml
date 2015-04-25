@@ -58,6 +58,13 @@ jobs:
       - {name: build-bosh-init}
       - {name: make-manifest, path: .}
       run: {path: ./bin/deploy_from_concourse.sh}
+  - task: delete
+    config:
+      platform: linux
+      image: {{docker-hub-task-image}}
+      inputs:
+      - {name: deployment, path: .}
+      run: {path: ./bin/delete_from_concourse.sh}
 
 resources:
 - name: git-bosh-init
