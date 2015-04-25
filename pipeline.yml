@@ -8,7 +8,7 @@ jobs:
     - {get: stemcell, trigger: true}
     - {get: release-cpi, trigger: true}
     - {get: release-redis, trigger: true}
-    - {get: bosh-init, trigger: true}
+    - {get: git-bosh-init, trigger: true}
     - {get: bosh-init-redis, trigger: true}
 
   - task: ls-inputs
@@ -52,11 +52,10 @@ jobs:
       run: {path: ./bin/deploy_from_concourse.sh}
 
 resources:
-- name: bosh-init
-  type: github-release
+- name: git-bosh-init
+  type: git
   source:
-    user: cloudfoundry
-    repository: bosh-init
+    uri: https://github.com/cloudfoundry/bosh-init.git
 
 - name: stemcell
   type: bosh-io-stemcell
@@ -66,7 +65,7 @@ resources:
 
 - name: release-cpi
   type: bosh-io-release
-  source: {repository: cloudfoundry/bosh-aws-cpi-release}
+  source: {repository: cloudfoundry-incubator/bosh-aws-cpi-release}
 
 - name: release-redis
   type: bosh-io-release
