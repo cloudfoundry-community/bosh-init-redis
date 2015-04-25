@@ -6,4 +6,8 @@ cd $DIR/..
 export PATH=$PWD/bin:$PATH
 export PATH=$PWD/build-bosh-init/gopath/src/github.com/cloudfoundry/bosh-init/out:$PATH
 
+# create a fake home that's inside the project so it can be accessed by subsequent concourse steps
+mkdir -p $PWD/tmp/home
+export HOME=$PWD/tmp/home
+
 bosh-init deploy redis.yml
