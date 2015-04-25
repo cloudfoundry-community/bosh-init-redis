@@ -24,7 +24,7 @@ name: redis
 
 releases:
 - name: bosh-aws-cpi
-url: file://${aws_cpi_release_path}
+  url: file://${aws_cpi_release_path}
 - name: redis
   url: file://${redis_release_path}
 
