@@ -9,7 +9,7 @@ jobs:
     - {get: release-cpi, trigger: true}
     - {get: release-redis, trigger: true}
     - {get: git-bosh-init, trigger: true}
-    - {get: bosh-init-redis, trigger: true}
+    - {get: bosh-init-redis, trigger: false}
 
   - task: ls-inputs
     config:
@@ -42,7 +42,7 @@ jobs:
       - {name: stemcell}
       - {name: release-cpi}
       - {name: release-redis}
-      run: {path: ./bin/make_manifest.sh}
+      run: {path: ./bin/make_manifest_from_concourse.sh}
       params:
         EIP: {{eip}}
         ACCESS_KEY_ID: {{aws-access-key-id}}
