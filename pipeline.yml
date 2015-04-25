@@ -27,10 +27,12 @@ jobs:
   - task: build-bosh-init
     config:
       platform: linux
-      image: {{docker-hub-task-image}}
+      image: docker:///concourse/static-golang
       inputs:
-      - {name: git-bosh-init, path: .}
-      run: {path: ./bin/build.sh}
+      - name: git-bosh-init
+        path: gopath/src/github.com/cloudfoundry/bosh-init
+      run:
+        path: gopath/src/github.com/cloudfoundry/bosh-init/bin/build
   - task: make-manifest
     config:
       platform: linux
