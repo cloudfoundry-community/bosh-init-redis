@@ -19,7 +19,6 @@ jobs:
       - name: stemcell
       - name: release-cpi
       - name: release-redis
-      - name: git-bosh-init
       - name: bosh-init-redis
       run:
         path: ls

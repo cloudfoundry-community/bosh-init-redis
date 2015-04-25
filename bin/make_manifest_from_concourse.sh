@@ -15,7 +15,7 @@ if [[
 fi
 
 stemcell_path=stemcell/stemcell.tgz
-aws_cpi_release_path=release-aws-cpi/release.tgz
+aws_cpi_release_path=release-cpi/release.tgz
 redis_release_path=release-redis/release.tgz
 
 cat >redis.yml <<EOF
